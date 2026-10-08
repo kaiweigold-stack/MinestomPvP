@@ -69,3 +69,12 @@ mavenPublishing {
 tasks.withType<GenerateModuleMetadata>().configureEach {
     dependsOn(tasks.withType<JavadocJar>())
 }
+
+tasks.withType<Sign>().configureEach {
+    onlyIf("Signing is only needed for remote publication") {
+        gradle.taskGraph.allTasks.any {
+            it.name.startsWith("publish") &&
+                    !it.name.contains("ToMavenLocal")
+        }
+    }
+}
