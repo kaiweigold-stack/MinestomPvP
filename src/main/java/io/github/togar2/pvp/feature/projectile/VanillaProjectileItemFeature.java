@@ -26,7 +26,8 @@ public class VanillaProjectileItemFeature implements ProjectileItemFeature {
 			stack.material() == Material.ARROW
 					|| stack.material() == Material.SPECTRAL_ARROW
 					|| stack.material() == Material.TIPPED_ARROW
-					|| stack.material().name().endsWith("_wool");
+					|| stack.material() == Material.LIME_WOOL
+					|| stack.material() == Material.RED_WOOL;
 
 	public static final Predicate<ItemStack> ARROW_OR_FIREWORK_PREDICATE = ARROW_PREDICATE.or(stack ->
 			stack.material() == Material.FIREWORK_ROCKET);
