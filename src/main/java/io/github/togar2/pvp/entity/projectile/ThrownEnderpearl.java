@@ -2,6 +2,7 @@ package io.github.togar2.pvp.entity.projectile;
 
 import io.github.togar2.pvp.feature.fall.FallFeature;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.LivingEntity;
@@ -56,6 +57,7 @@ public class ThrownEnderpearl extends CustomEntityProjectile implements ItemHold
 				}
 				
 				player.teleport(position);
+				player.setVelocity(Vec.ZERO);
 				fallFeature.resetFallDistance(player);
 				
 				player.damage(DamageType.FALL, 5.0F);

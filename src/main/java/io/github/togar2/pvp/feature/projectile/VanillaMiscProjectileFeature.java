@@ -82,10 +82,6 @@ public class VanillaMiscProjectileFeature implements MiscProjectileFeature, Regi
 					0.5f, 0.4f / (random.nextFloat() * 0.4f + 0.8f)
 			), player);
 
-			if (enderpearl) {
-				itemCooldownFeature.setCooldown(player, Material.ENDER_PEARL.name(), 20);
-			}
-
 			Pos position = player.getPosition().add(0, player.getEyeHeight(), 0);
 			projectile.shootFromRotation(position.pitch(), position.yaw(), 0, 1.5, 1.0, 0.0);
 			projectile.setInstance(Objects.requireNonNull(player.getInstance()), position.withView(projectile.getPosition()));
