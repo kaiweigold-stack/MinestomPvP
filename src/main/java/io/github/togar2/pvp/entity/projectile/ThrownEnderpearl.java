@@ -57,7 +57,6 @@ public class ThrownEnderpearl extends CustomEntityProjectile implements ItemHold
 				}
 				
 				player.teleport(position);
-				player.setVelocity(Vec.ZERO);
 				fallFeature.resetFallDistance(player);
 				
 				player.damage(DamageType.FALL, 5.0F);
