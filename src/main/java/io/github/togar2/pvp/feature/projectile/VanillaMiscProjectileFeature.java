@@ -94,10 +94,6 @@ public class VanillaMiscProjectileFeature implements MiscProjectileFeature, Regi
 			Vec playerVel = player.getVelocity();
 			projectile.setVelocity(projectile.getVelocity().add(playerVel.x(),
 					player.isOnGround() ? 0.0D : playerVel.y(), playerVel.z()));
-			
-			if (player.getGameMode() != GameMode.CREATIVE) {
-				player.setItemInHand(event.getHand(), stack.withAmount(stack.amount() - 1));
-			}
 		});
 	}
 }
