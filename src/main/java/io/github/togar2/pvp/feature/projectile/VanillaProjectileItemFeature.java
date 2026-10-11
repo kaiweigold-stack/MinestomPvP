@@ -2,7 +2,6 @@ package io.github.togar2.pvp.feature.projectile;
 
 import java.util.function.Predicate;
 
-import net.minestom.server.inventory.PlayerInventory;
 import org.jetbrains.annotations.Nullable;
 
 import io.github.togar2.pvp.entity.projectile.Arrow;
@@ -43,44 +42,31 @@ public class VanillaProjectileItemFeature implements ProjectileItemFeature {
 		return getProjectile(player, ARROW_OR_FIREWORK_PREDICATE, ARROW_PREDICATE);
 	}
 
-	public static @Nullable ProjectileItem getProjectile(
-			Player player,
-			Predicate<ItemStack> heldSupportedPredicate,
-			Predicate<ItemStack> allSupportedPredicate
-	) {
-		System.out.println("LUL");
-		PlayerInventory inventory = player.getInventory();
-		ItemStack[] itemStacks = inventory.getItemStacks();
+	public static @Nullable ProjectileItem getProjectile(Player player, Predicate<ItemStack> heldSupportedPredicate,
+														 Predicate<ItemStack> allSupportedPredicate) {
+		ProjectileItem held = getHeldItem(player, heldSupportedPredicate);
+		if (held != null) return held;
 
-		int smallestSlot = -1;
-		ItemStack smallestStack = null;
+		ItemStack[] itemStacks = player.getInventory().getItemStacks();
+		ProjectileItem smallest = null;
 
 		for (int i = 0; i < itemStacks.length; i++) {
 			ItemStack stack = itemStacks[i];
+			if (stack == null || stack.isAir()) continue;
+			if (!allSupportedPredicate.test(stack)) continue;
 
-			if (stack == null || stack.isAir() || stack.amount() <= 0) {
-				continue;
-			}
-
-			if (!allSupportedPredicate.test(stack)) {
-				continue;
-			}
-
-			if (smallestStack == null || stack.amount() < smallestStack.amount()) {
-				smallestSlot = i;
-				smallestStack = stack;
+			if (smallest == null || stack.amount() < smallest.stack().amount()) {
+				smallest = new ProjectileItem(i, stack);
 			}
 		}
 
-		if (smallestStack != null) {
-			return new ProjectileItem(smallestSlot, smallestStack);
-		}
+		if (smallest != null) return smallest;
 
 		if (player.getGameMode() == GameMode.CREATIVE) {
 			return new ProjectileItem(-1, Arrow.DEFAULT_ARROW);
+		} else {
+			return null;
 		}
-
-		return null;
 	}
 
 	private static @Nullable ProjectileItem getHeldItem(Player player, Predicate<ItemStack> predicate) {
