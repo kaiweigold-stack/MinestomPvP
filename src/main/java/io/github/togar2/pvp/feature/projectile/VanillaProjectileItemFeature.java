@@ -44,9 +44,6 @@ public class VanillaProjectileItemFeature implements ProjectileItemFeature {
 
 	public static @Nullable ProjectileItem getProjectile(Player player, Predicate<ItemStack> heldSupportedPredicate,
 														 Predicate<ItemStack> allSupportedPredicate) {
-		ProjectileItem held = getHeldItem(player, heldSupportedPredicate);
-		if (held != null) return held;
-
 		ItemStack[] itemStacks = player.getInventory().getItemStacks();
 		ProjectileItem smallest = null;
 
@@ -60,13 +57,20 @@ public class VanillaProjectileItemFeature implements ProjectileItemFeature {
 			}
 		}
 
-		if (smallest != null) return smallest;
+		if (smallest != null) {
+			return smallest;
+		}
+
+		ProjectileItem held = getHeldItem(player, heldSupportedPredicate);
+		if (held != null) {
+			return held;
+		}
 
 		if (player.getGameMode() == GameMode.CREATIVE) {
 			return new ProjectileItem(-1, Arrow.DEFAULT_ARROW);
-		} else {
-			return null;
 		}
+
+		return null;
 	}
 
 	private static @Nullable ProjectileItem getHeldItem(Player player, Predicate<ItemStack> predicate) {
