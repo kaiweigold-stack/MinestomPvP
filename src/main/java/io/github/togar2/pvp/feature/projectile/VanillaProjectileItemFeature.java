@@ -48,6 +48,7 @@ public class VanillaProjectileItemFeature implements ProjectileItemFeature {
 			Predicate<ItemStack> heldSupportedPredicate,
 			Predicate<ItemStack> allSupportedPredicate
 	) {
+		System.out.println("LUL");
 		PlayerInventory inventory = player.getInventory();
 		ItemStack[] itemStacks = inventory.getItemStacks();
 
