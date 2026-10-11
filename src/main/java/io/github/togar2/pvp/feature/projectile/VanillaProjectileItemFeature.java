@@ -2,6 +2,7 @@ package io.github.togar2.pvp.feature.projectile;
 
 import java.util.function.Predicate;
 
+import net.minestom.server.inventory.PlayerInventory;
 import org.jetbrains.annotations.Nullable;
 
 import io.github.togar2.pvp.entity.projectile.Arrow;
@@ -42,28 +43,36 @@ public class VanillaProjectileItemFeature implements ProjectileItemFeature {
 		return getProjectile(player, ARROW_OR_FIREWORK_PREDICATE, ARROW_PREDICATE);
 	}
 
-	public static @Nullable ProjectileItem getProjectile(Player player, Predicate<ItemStack> heldSupportedPredicate,
-														 Predicate<ItemStack> allSupportedPredicate) {
-		ItemStack[] itemStacks = player.getInventory().getItemStacks();
-		ProjectileItem smallest = null;
+	public static @Nullable ProjectileItem getProjectile(
+			Player player,
+			Predicate<ItemStack> heldSupportedPredicate,
+			Predicate<ItemStack> allSupportedPredicate
+	) {
+		PlayerInventory inventory = player.getInventory();
+		ItemStack[] itemStacks = inventory.getItemStacks();
+
+		int smallestSlot = -1;
+		ItemStack smallestStack = null;
 
 		for (int i = 0; i < itemStacks.length; i++) {
 			ItemStack stack = itemStacks[i];
-			if (stack == null || stack.isAir()) continue;
-			if (!allSupportedPredicate.test(stack)) continue;
 
-			if (smallest == null || stack.amount() < smallest.stack().amount()) {
-				smallest = new ProjectileItem(i, stack);
+			if (stack == null || stack.isAir() || stack.amount() <= 0) {
+				continue;
+			}
+
+			if (!allSupportedPredicate.test(stack)) {
+				continue;
+			}
+
+			if (smallestStack == null || stack.amount() < smallestStack.amount()) {
+				smallestSlot = i;
+				smallestStack = stack;
 			}
 		}
 
-		if (smallest != null) {
-			return smallest;
-		}
-
-		ProjectileItem held = getHeldItem(player, heldSupportedPredicate);
-		if (held != null) {
-			return held;
+		if (smallestStack != null) {
+			return new ProjectileItem(smallestSlot, smallestStack);
 		}
 
 		if (player.getGameMode() == GameMode.CREATIVE) {
