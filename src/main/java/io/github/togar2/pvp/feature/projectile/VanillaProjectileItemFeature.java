@@ -48,11 +48,19 @@ public class VanillaProjectileItemFeature implements ProjectileItemFeature {
 		if (held != null) return held;
 
 		ItemStack[] itemStacks = player.getInventory().getItemStacks();
+		ProjectileItem smallest = null;
+
 		for (int i = 0; i < itemStacks.length; i++) {
 			ItemStack stack = itemStacks[i];
 			if (stack == null || stack.isAir()) continue;
-			if (allSupportedPredicate.test(stack)) return new ProjectileItem(i, stack);
+			if (!allSupportedPredicate.test(stack)) continue;
+
+			if (smallest == null || stack.amount() < smallest.stack().amount()) {
+				smallest = new ProjectileItem(i, stack);
+			}
 		}
+
+		if (smallest != null) return smallest;
 
 		if (player.getGameMode() == GameMode.CREATIVE) {
 			return new ProjectileItem(-1, Arrow.DEFAULT_ARROW);
